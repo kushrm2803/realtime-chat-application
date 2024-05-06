@@ -14,7 +14,14 @@ const Chatlist=()=>{
                     src={addMode ? "./minus.png" : "./plus.png"}
                     alt="" 
                     className="plus-icon"
-                    onClick={()=>setAddMode((prevState)=>!prevState)}
+                    onClick={()=>{
+                        if(addMode){
+                            setAddMode(false);
+                        }
+                        else{
+                            setAddMode(true);
+                        }
+                    }}
                 />
             </div>
             <div className="item">
