@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./login.css";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [avatar, setavatar] = useState({
@@ -16,11 +17,16 @@ const Login = () => {
     }
   };
 
+  const handlelogin=(e)=>{
+    e.preventDefault();
+    toast.success("Welcome back!")
+  }
+
   return (
     <div className="login">
       <div className="item">
         <h1>Welcome back,</h1>
-        <form>
+        <form onSubmit={handlelogin}>
           <input type="text" placeholder="Email" name="email" />
           <input type="text" placeholder="Password" name="password" />
           <button>LOG IN</button>
