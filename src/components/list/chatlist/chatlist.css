@@ -73,23 +73,4 @@
     }
 }
 
-/* Width */
-.chatlist::-webkit-scrollbar {
-    width: 10px;
-  }
-  
-  /* Track */
-  .chatlist::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-  
-  /* Handle */
-  .chatlist::-webkit-scrollbar-thumb {
-    background: #000000;
-  }
-  
-  /* Handle on hover */
-  .chatlist::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
   
