@@ -1,9 +1,13 @@
 import { useState } from "react"
 import "./chatlist.css"
 import Adduser from "./adduser/Adduser"
+import { useuserStore } from "../../../lib/userStore"
 
 const Chatlist=()=>{
     const[addMode,setAddMode]=useState(false)
+
+    const {currentuser}=useuserStore;
+
     return(
         <div className='chatlist'>
             <div className="search">
