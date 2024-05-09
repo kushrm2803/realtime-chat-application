@@ -22,7 +22,6 @@ const App = () => {
     };
   }, [fetchuserinfo]);
 
-  console.log(currentuser);
   if(isloading) return <div className="loading">Loading...</div>
 
   return (
