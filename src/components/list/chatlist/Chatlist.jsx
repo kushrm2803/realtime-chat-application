@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./chatlist.css";
 import Adduser from "./adduser/Adduser";
 import { useuserStore } from "../../../lib/userStore";
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, onSnapshot,updateDoc } from "firebase/firestore";
 import { data_base } from "../../../lib/firebase";
 
 const Chatlist = () => {
@@ -18,7 +18,7 @@ const Chatlist = () => {
         const items = res.data().chats;
 
         const promise = items.map(async (item) => {
-          const userdocRef = doc(data_base, "user", item.receiverId);
+          const userdocRef = doc(data_base, "users", item.receiverId);
           const userdocSnap = await getDoc(userdocRef);
 
           const user = userdocSnap.data();
@@ -61,9 +61,9 @@ const Chatlist = () => {
       </div>
       {chats.map((chat) => (
         <div className="item" key={chat.chatId}>
-          <img src="./avatar.png" alt="" />
+          <img src={chat.user.avatar || "./avatar.png"} alt="" />
           <div className="texts">
-            <span>Jane Doe</span>
+            <span>{chat.user.username}</span>
             <p>{chat.lastMessage}</p>
           </div>
         </div>
