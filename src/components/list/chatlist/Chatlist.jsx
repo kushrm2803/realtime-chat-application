@@ -40,7 +40,25 @@ const Chatlist = () => {
   }, [currentuser.id]);
 
   const handleselect = async (chat) => {
-    changechat(chat.chatId, chat.user);
+    const userchats=chats.map(item=>{
+      const {user,...rest}=item;
+      return rest;
+    })
+    const chatIndex=userchats.findIndex(item=>item.chatId===chat.chatId);
+
+    userchats[chatIndex].isSeen=true;
+
+    const userchatsRef=doc(data_base,"userchats",currentuser.id);
+
+    try {
+      await updateDoc(userchatsRef,{
+        chats:userchats,
+      })
+      changechat(chat.chatId, chat.user);
+    } catch (err) {
+      console.log(err);
+    }
+
   };
 
   return (
@@ -68,6 +86,7 @@ const Chatlist = () => {
           className="item"
           key={chat.chatId}
           onClick={() => handleselect(chat)}
+          style={{ backgroundColor: chat?.isSeen ? "transparent" : "#5183fe" }}
         >
           <img src={chat.user.avatar || "./avatar.png"} alt="" />
           <div className="texts">
