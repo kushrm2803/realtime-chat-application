@@ -22,7 +22,8 @@ const Chat = () => {
     url: "",
   });
 
-  const { chatId, user } = usechatStore();
+  const { chatId, user, iscurrentuserBlocked, isreceiverBlocked } =
+    usechatStore();
   const { currentuser } = useuserStore();
 
   const endref = useRef(null);
@@ -110,9 +111,9 @@ const Chat = () => {
     <div className="chat">
       <div className="top">
         <div className="user">
-          <img src="./avatar.png" alt="" />
+          <img src={user?.avatar || "./avatar.png"} alt="" />
           <div className="texts">
-            <span>John Doe</span>
+            <span>{user?.username}</span>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
           </div>
         </div>
@@ -124,7 +125,12 @@ const Chat = () => {
       </div>
       <div className="center">
         {chat?.messages?.map((message) => (
-          <div className={message.senderId===currentuser?.id ? "message own" : "message"} key={message?.createAt}>
+          <div
+            className={
+              message.senderId === currentuser?.id ? "message own" : "message"
+            }
+            key={message?.createAt}
+          >
             <div className="texts">
               {message.img && <img src={message.img} alt="" />}
               <p>{message.text}</p>
@@ -157,9 +163,10 @@ const Chat = () => {
         </div>
         <input
           type="text"
-          placeholder="Message"
+          placeholder={(iscurrentuserBlocked||isreceiverBlocked)?"You cannot send a message" : "Type a message..."}
           value={text}
           onChange={(e) => settext(e.target.value)}
+          disabled={iscurrentuserBlocked || isreceiverBlocked}
         />
         <div className="emoji">
           <img
@@ -177,7 +184,11 @@ const Chat = () => {
             <EmojiPicker open={openEmoji} onEmojiClick={handleEmoji} />
           </div>
         </div>
-        <button className="sendbutton" onClick={handlesend}>
+        <button
+          className="sendbutton"
+          onClick={handlesend}
+          disabled={iscurrentuserBlocked || isreceiverBlocked}
+        >
           Send
         </button>
       </div>
