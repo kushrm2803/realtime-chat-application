@@ -9,7 +9,7 @@ import { usechatStore } from "../../../lib/chatStore";
 const Chatlist = () => {
   const [addMode, setAddMode] = useState(false);
   const [chats, setchats] = useState([]);
-  const [input, setinput] = useState([]);
+  const [input, setinput] = useState("");
 
   const { currentuser } = useuserStore();
   const { changechat } = usechatStore();
@@ -31,7 +31,7 @@ const Chatlist = () => {
 
         const chatdata = await Promise.all(promise);
 
-        setchats(chatdata.sort((a, b) => b.updatedAt - addMode.updatedAt));
+        setchats(chatdata.sort((a, b) => b.updatedAt - a.updatedAt));
       }
     );
 
@@ -63,9 +63,9 @@ const Chatlist = () => {
     }
   };
 
-  // const filteredchats = chats.filter((c) =>
-  //   c.user.username.toLowerCase().includes(input.toLowerCase()) 
-  // );
+  const filteredchats = chats.filter((c) =>
+    c.user.username.toLowerCase().includes(input.toLowerCase())
+  );
 
   return (
     <div className="chatlist">
@@ -91,8 +91,7 @@ const Chatlist = () => {
           }}
         />
       </div>
-      {/* {filteredchats.map((chat) => ( */}
-      {chats.map((chat) => (
+      {filteredchats.map((chat) => (
         <div
           className="item"
           key={chat.chatId}
@@ -113,7 +112,7 @@ const Chatlist = () => {
                 ? "User"
                 : chat.user.username}
             </span>
-            <p>{chat.lastMessage}</p>
+            <p>{chat.lastmessage}</p>
           </div>
         </div>
       ))}

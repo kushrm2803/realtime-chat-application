@@ -12,6 +12,7 @@ import { data_base } from "../../lib/firebase";
 import { usechatStore } from "../../lib/chatStore";
 import { useuserStore } from "../../lib/userStore";
 import upload from "../../lib/upload";
+import { format } from "timeago.js";
 
 const Chat = () => {
   const [openEmoji, setopenEmoji] = useState(false);
@@ -99,12 +100,13 @@ const Chat = () => {
       });
     } catch (err) {
       console.log(err);
+    } finally {
+      setimg({
+        file: null,
+        url: "",
+      });
+      settext("");
     }
-    setimg({
-      file: null,
-      url: "",
-    });
-    settext("");
   };
 
   return (
@@ -114,7 +116,7 @@ const Chat = () => {
           <img src={user?.avatar || "./avatar.png"} alt="" />
           <div className="texts">
             <span>{user?.username}</span>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <p>User Info</p>
           </div>
         </div>
         <div className="icons">
@@ -134,14 +136,14 @@ const Chat = () => {
             <div className="texts">
               {message.img && <img src={message.img} alt="" />}
               <p>{message.text}</p>
-              {/* <span>{message}</span> */}
+              <span>{format(message.createdAt.toDate())}</span>
             </div>
           </div>
         ))}
         {img.url && (
           <div className="message own">
             <div className="texts">
-              <img src="{img.url}" alt="" />
+              <img src={img.url} alt="" />
             </div>
           </div>
         )}
@@ -163,7 +165,11 @@ const Chat = () => {
         </div>
         <input
           type="text"
-          placeholder={(iscurrentuserBlocked||isreceiverBlocked)?"You cannot send a message" : "Type a message..."}
+          placeholder={
+            iscurrentuserBlocked || isreceiverBlocked
+              ? "You cannot send a message"
+              : "Type a message..."
+          }
           value={text}
           onChange={(e) => settext(e.target.value)}
           disabled={iscurrentuserBlocked || isreceiverBlocked}

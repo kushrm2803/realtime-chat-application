@@ -6,7 +6,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, data_base } from "../../lib/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import upload from "../../lib/upload";
 
 const Login = () => {
@@ -31,6 +31,18 @@ const Login = () => {
     setloading(true);
     const formdata = new FormData(e.target);
     const { username, email, password } = Object.fromEntries(formdata);
+
+    if (!username || !email || !password)
+      return toast.warn("Please Enter Details!");
+    if (!avatar.file) return toast.warn("Please upload Profile Pic!");
+
+    const userRef = collection(data_base, "users");
+    const Query = query(userRef, where("username", "==", username));
+    const querySnapShot = await getDocs(Query);
+    if (!querySnapShot.empty) {
+      return toast.warn("Select another username");
+    }
+
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
 
@@ -50,6 +62,7 @@ const Login = () => {
 
       toast.success("Registered successfully!");
     } catch (err) {
+      console.log(err);
       toast.error(err.message);
     } finally {
       setloading(false);
@@ -90,7 +103,6 @@ const Login = () => {
         </h1>
         <form onSubmit={handleregister}>
           <label htmlFor="file">
-            {" "}
             <img src={avatar.url || "./avatar.png"} alt="" />
             Upload an image
           </label>

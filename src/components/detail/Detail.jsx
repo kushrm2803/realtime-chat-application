@@ -5,8 +5,14 @@ import "./detail.css";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 
 const Detail = () => {
-  const { chatId, user, iscurrentuserBlocked, isreceiverBlocked, changeBlock } =
-    usechatStore();
+  const {
+    chatId,
+    user,
+    iscurrentuserBlocked,
+    isreceiverBlocked,
+    changeBlock,
+    resetChat,
+  } = usechatStore();
   const { currentuser } = useuserStore();
 
   const handleblock = async () => {
@@ -18,7 +24,14 @@ const Detail = () => {
         blocked: isreceiverBlocked ? arrayRemove(user.id) : arrayUnion(user.id),
       });
       changeBlock();
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handlelogout = () => {
+    auth.signOut();
+    resetChat();
   };
 
   return (
@@ -26,7 +39,7 @@ const Detail = () => {
       <div className="user">
         <img src={user?.avatar || "./avatar.png"} alt="" />
         <h2>{user?.username}</h2>
-        <p>Lorem ipsum dolor sit amet.</p>
+        <p>User Details</p>
       </div>
       <div className="info">
         <div className="option">
@@ -49,14 +62,20 @@ const Detail = () => {
           <div className="photos">
             <div className="photoitem">
               <div className="photodetail">
-                <img src="" alt="" />
+                <img
+                  src="https://images.pexels.com/photos/7381200/pexels-photo-7381200.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load"
+                  alt=""
+                />
                 <span>Photo_2024.png</span>
               </div>
               <img src="./download.png" alt="" className="icon" />
             </div>
             <div className="photoitem">
               <div className="photodetail">
-                <img src="" alt="" />
+                <img
+                  src="https://images.pexels.com/photos/7381200/pexels-photo-7381200.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load"
+                  alt=""
+                />
                 <span>Photo_2024.png</span>
               </div>
               <img src="./download.png" alt="" className="icon" />
@@ -76,7 +95,7 @@ const Detail = () => {
             ? "User Blocked"
             : "Block User"}
         </button>
-        <button className="logout" onClick={() => auth.signOut()}>
+        <button className="logout" onClick={handlelogout}>
           LOG OUT
         </button>
       </div>
