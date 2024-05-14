@@ -1,9 +1,5 @@
 # Realtime Chat Application
 
-![Realtime Chat App Screenshot](./public/Chats.png)
-
-## Description
-
 A realtime chat application enabling seamless communication. Developed with React.js, Zustand, timeago.js, emoji-picker-react, react-toastify, and Firebase.
 
 ## Features
@@ -25,9 +21,19 @@ A realtime chat application enabling seamless communication. Developed with Reac
 
 ## Screenshots
 
-![Search](./public/search.png)
+- Realtime Chat
+
+![Realtime Chat App](./public/Chats.png)
+
+- Search
+
+![Search](./public/SearchUser.png)
+
+- Registration Page
 
 ![Registration Page](./public/RegistrationPage.png)
+
+- Block Feature
 
 ![Block Feature](./public/BlockedUser.png)
 
@@ -40,4 +46,4 @@ A realtime chat application enabling seamless communication. Developed with Reac
 5. Manage users by blocking/unblocking as needed.
 
 
-Happy Chating!
+## Happy Chating!
