@@ -13,6 +13,9 @@ import { usechatStore } from "../../lib/chatStore";
 import { useuserStore } from "../../lib/userStore";
 import upload from "../../lib/upload";
 import { format } from "timeago.js";
+import { generateContent } from "./AIresponse";
+
+const AI_USER_ID = import.meta.env.VITE_AI_USER_ID;
 
 const Chat = () => {
   const [openEmoji, setopenEmoji] = useState(false);
@@ -57,13 +60,51 @@ const Chat = () => {
     }
   };
 
+  const handleAIResponse = async (text) => {
+    try {
+      const aiResponse = await generateContent(text);
+      await updateDoc(doc(data_base, "chats", chatId), {
+        messages: arrayUnion({
+          senderId: AI_USER_ID,
+          text: aiResponse,
+          createdAt: new Date(),
+        }),
+      });
+
+      const userIds = [currentuser.id, user.id];
+
+      userIds.forEach(async (id) => {
+        const userchatsRef = doc(data_base, "userchats", id);
+        const userchatsSnapshot = await getDoc(userchatsRef);
+
+        if (userchatsSnapshot.exists()) {
+          const userchatsData = userchatsSnapshot.data();
+          const chatIndex = userchatsData.chats.findIndex(
+            (c) => c.chatId === chatId
+          );
+
+          userchatsData.chats[chatIndex].lastmessage = aiResponse;
+          userchatsData.chats[chatIndex].isSeen =
+            id === currentuser.id ? true : false;
+          userchatsData.chats[chatIndex].updatedAt = Date.now();
+
+          await updateDoc(userchatsRef, {
+            chats: userchatsData.chats,
+          });
+        }
+      });
+    } catch (err) {
+      console.error("Error handling AI response:", err);
+    }
+  };
+
   const handlesend = async () => {
     if (text === "") return;
 
     let imgUrl = null;
 
     try {
-      if (img.file) {
+      if (img.file && user.id !== AI_USER_ID) {
         imgUrl = await upload(img.file);
       }
 
@@ -98,6 +139,9 @@ const Chat = () => {
           });
         }
       });
+      if (user.id === AI_USER_ID) {
+        await handleAIResponse(text);
+      }
     } catch (err) {
       console.log(err);
     } finally {
